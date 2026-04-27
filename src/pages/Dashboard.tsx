@@ -73,14 +73,14 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
           <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={toggleTheme}
-              className="inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-border bg-secondary px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+              className="neon-button inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-border bg-secondary px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
             </button>
             <button
               onClick={() => setShowHistory(true)}
-              className="inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-border bg-secondary px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+              className="neon-button inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-border bg-secondary px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
             >
               <History className="h-3 w-3" />
               <span className="hidden sm:inline">History</span>
@@ -88,7 +88,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
             <span className="text-xs font-mono text-muted-foreground hidden lg:inline">{user?.email}</span>
             <button
               onClick={handleLogout}
-              className="inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-border bg-secondary px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
+              className="neon-button inline-flex items-center gap-1 sm:gap-1.5 rounded-md border border-border bg-secondary px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-mono text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
             >
               <LogOut className="h-3 w-3" />
               <span className="hidden sm:inline">Logout</span>
