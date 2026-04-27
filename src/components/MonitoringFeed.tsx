@@ -99,6 +99,8 @@ const MonitoringFeed = ({ fullName, username, keywords, onAlertsChange, onMonito
     };
   }, []);
 
+  const wrapperClassName = "neon-panel lift-3d rounded-lg border border-border bg-card p-4 sm:p-6";
+
   return (
 O    <div className="rounded-lg border border-border bg-card p-4 sm:p-6 neon-panel neon-3d">
       <div className="mb-4 flex items-center justify-between gap-2">
