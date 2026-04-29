@@ -7,9 +7,22 @@ interface AlertHistoryProps {
 }
 
 const SEVERITY_BADGE: Record<AlertSeverity, string> = {
-  low: "text-[hsl(var(--severity-low))] bg-[hsl(var(--severity-low)/0.15)]",
-  medium: "text-[hsl(var(--severity-medium))] bg-[hsl(var(--severity-medium)/0.15)]",
-  high: "text-[hsl(var(--severity-high))] bg-[hsl(var(--severity-high)/0.15)]",
+  low: "text-yellow-300 bg-yellow-400/10",
+  medium: "text-orange-300 bg-orange-400/10",
+  high: "text-red-300 bg-red-500/10",
+};
+
+
+const ACTIONS: Record<AlertSeverity, string> = {
+  low: "Review account activity and rotate weak passwords.",
+  medium: "Enable additional verification and audit connected apps.",
+  high: "Enable 2FA immediately and lock suspicious sessions.",
+};
+
+const EXPLAIN: Record<AlertSeverity, string> = {
+  low: "Minor anomaly observed in monitored metadata.",
+  medium: "Suspicious behavior pattern matched known threat signatures.",
+  high: "High-confidence malicious indicator tied to identity misuse.",
 };
 
 const SEVERITY_BORDER: Record<AlertSeverity, string> = {
