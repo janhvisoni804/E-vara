@@ -1,21 +1,50 @@
-import { ExternalLink, ArrowLeft, Clock, Download, FileText } from "lucide-react";
+import { ArrowLeft, ShieldAlert } from "lucide-react";
 import type { AlertItem, AlertSeverity } from "@/components/MonitoringFeed";
 
-interface AlertHistoryProps {
-  alerts: AlertItem[];
-  onBack: () => void;
-}
+interface AlertHistoryProps { alerts: AlertItem[]; onBack: () => void; }
 
 const SEVERITY_BADGE: Record<AlertSeverity, string> = {
-  low: "text-[hsl(var(--severity-low))] bg-[hsl(var(--severity-low)/0.15)]",
-  medium: "text-[hsl(var(--severity-medium))] bg-[hsl(var(--severity-medium)/0.15)]",
-  high: "text-[hsl(var(--severity-high))] bg-[hsl(var(--severity-high)/0.15)]",
+  low: "text-yellow-300 bg-yellow-400/10",
+  medium: "text-orange-300 bg-orange-400/10",
+  high: "text-red-300 bg-red-500/10",
 };
 
-const SEVERITY_BORDER: Record<AlertSeverity, string> = {
-  low: "border-l-[hsl(var(--severity-low))]",
-  medium: "border-l-[hsl(var(--severity-medium))]",
-  high: "border-l-[hsl(var(--severity-high))]",
+
+const ACTIONS: Record<AlertSeverity, string> = {
+  low: "Review account activity and rotate weak passwords.",
+  medium: "Enable additional verification and audit connected apps.",
+  high: "Enable 2FA immediately and lock suspicious sessions.",
+};
+
+const EXPLAIN: Record<AlertSeverity, string> = {
+  low: "Minor anomaly observed in monitored metadata.",
+  medium: "Suspicious behavior pattern matched known threat signatures.",
+  high: "High-confidence malicious indicator tied to identity misuse.",
+};
+
+
+const THREAT_GUIDANCE: Record<AlertSeverity, { type: string; explanation: string; action: string }> = {
+  low: {
+    type: "Suspicious Metadata Drift",
+    explanation: "Minor anomalies were found in indexed identity records.",
+    action: "Revalidate public profile visibility settings.",
+  },
+  medium: {
+    type: "Credential Threat Activity",
+    explanation: "Potential reuse patterns suggest elevated exposure risk.",
+    action: "Rotate passwords and enable multi-factor authentication.",
+  },
+  high: {
+    type: "Suspicious Login Attempt",
+    explanation: "High-confidence signal indicates unauthorized access attempts.",
+    action: "Enable 2FA immediately and review active sessions.",
+  },
+};
+
+const actionBySeverity: Record<AlertSeverity, string> = {
+  low: "Review account activity and update passwords for inactive services.",
+  medium: "Enable MFA and revoke unknown sessions on linked services.",
+  high: "Suspicious login attempt detected. Recommended: Enable 2FA immediately.",
 };
 
 const exportCSV = (alerts: AlertItem[]) => {
