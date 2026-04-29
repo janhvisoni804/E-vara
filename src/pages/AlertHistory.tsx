@@ -12,6 +12,25 @@ const SEVERITY_BADGE: Record<AlertSeverity, string> = {
   high: "text-[hsl(var(--severity-high))] bg-[hsl(var(--severity-high)/0.15)]",
 };
 
+
+const THREAT_GUIDANCE: Record<AlertSeverity, { type: string; explanation: string; action: string }> = {
+  low: {
+    type: "Suspicious Metadata Drift",
+    explanation: "Minor anomalies were found in indexed identity records.",
+    action: "Revalidate public profile visibility settings.",
+  },
+  medium: {
+    type: "Credential Threat Activity",
+    explanation: "Potential reuse patterns suggest elevated exposure risk.",
+    action: "Rotate passwords and enable multi-factor authentication.",
+  },
+  high: {
+    type: "Suspicious Login Attempt",
+    explanation: "High-confidence signal indicates unauthorized access attempts.",
+    action: "Enable 2FA immediately and review active sessions.",
+  },
+};
+
 const SEVERITY_BORDER: Record<AlertSeverity, string> = {
   low: "border-l-[hsl(var(--severity-low))]",
   medium: "border-l-[hsl(var(--severity-medium))]",
@@ -107,7 +126,12 @@ const AlertHistory = ({ alerts, onBack }: AlertHistoryProps) => {
                 style={{ animationDelay: `${Math.min(i * 30, 300)}ms`, animationFillMode: "both" }}
               >
                 <div className="mb-2 flex items-start justify-between gap-2 sm:gap-4">
-                  <p className="text-xs font-body text-foreground">{alert.message}</p>
+                  <div>
+                    <p className="text-xs font-body text-foreground">{alert.message}</p>
+                    <p className="mt-1 text-[11px] text-[#8bb6d9]">Threat: {THREAT_GUIDANCE[alert.severity].type}</p>
+                    <p className="text-[11px] text-[#6f99bb]">{THREAT_GUIDANCE[alert.severity].explanation}</p>
+                    <p className="text-[11px] text-[#ffb58f]">Recommended: {THREAT_GUIDANCE[alert.severity].action}</p>
+                  </div>
                   <div className="flex shrink-0 items-center gap-2">
                     <span className={`rounded px-1.5 py-0.5 text-[10px] font-mono uppercase ${SEVERITY_BADGE[alert.severity]}`}>
                       {alert.severity}

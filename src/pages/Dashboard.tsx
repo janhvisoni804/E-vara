@@ -11,6 +11,7 @@ import { SearchResultsIntelligence } from "@/components/SearchResultsIntelligenc
 import CyberIntelligencePanel from "@/components/CyberIntelligencePanel";
 import AlertHistory from "@/pages/AlertHistory";
 import CyberIntelligenceSuite from "@/components/CyberIntelligenceSuite";
+import ThreatScanPanel from "@/components/ThreatScanPanel";
 
 interface DashboardProps {
   onLogout: () => void;
@@ -68,6 +69,8 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
 
   const isSetupComplete = identity?.faceImage && identity?.fullName;
 
+  const trend = alerts.length > 5 ? "UP" : "DOWN";
+
   if (showHistory) {
     return <AlertHistory alerts={alerts} onBack={() => setShowHistory(false)} />;
   }
@@ -116,6 +119,19 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
             monitoringStartTime={monitoringStart}
           />
         </div>
+        <div className="mb-4 grid gap-4 sm:mb-6 lg:grid-cols-[280px_1fr]">
+          <div className="rounded-xl border border-[#244163] bg-[#0b1529] p-4">
+            <div className="mx-auto h-36 w-36 rounded-full" style={{ background: `conic-gradient(#00e5ff ${riskScore * 3.6}deg, #1c2a40 0deg)` }}>
+              <div className="m-3 flex h-[120px] w-[120px] items-center justify-center rounded-full bg-[#0a0f1c] font-mono text-2xl text-[#b6f6ff]">{riskScore}%</div>
+            </div>
+            <p className="mt-3 text-center text-sm text-[#9fdff8]">Your Digital Risk Level: {riskScore > 65 ? "Medium" : "Low"}</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border border-[#244163] bg-[#0b1529] p-3"><p className="text-xs text-[#75a9ca]">Threats detected</p><p className="font-mono text-xl text-[#d6f8ff]">{alerts.length}</p></div>
+            <div className="rounded-lg border border-[#244163] bg-[#0b1529] p-3"><p className="text-xs text-[#75a9ca]">Last scan time</p><p className="font-mono text-sm text-[#d6f8ff]">{new Date().toLocaleTimeString()}</p></div>
+            <div className="rounded-lg border border-[#244163] bg-[#0b1529] p-3"><p className="text-xs text-[#75a9ca]">Risk trend</p><p className="font-mono text-xl text-[#d6f8ff]">{trend}</p></div>
+          </div>
+        </div>
 
         <div className="grid gap-4 sm:gap-6 lg:grid-cols-[360px_1fr]">
           <div className="space-y-4 lg:sticky lg:top-[57px] lg:self-start">
@@ -127,6 +143,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
           <div className="space-y-4">
             {isSetupComplete ? (
               <>
+                <ThreatScanPanel />
                 <CyberIntelligenceSuite
                   fullName={identity!.fullName}
                   username={identity!.username}
