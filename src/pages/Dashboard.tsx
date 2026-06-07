@@ -78,6 +78,11 @@ const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
               <span className="text-xs font-mono text-primary/80">{user?.email}</span>
             </div>
             
+            <div className="hidden lg:flex flex-col items-end mr-4 border-l border-border/40 pl-4">
+              <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Kernel v2.4.1-STABLE</span>
+              <span className="text-[9px] font-mono text-primary/50">NODE_ID: {Math.random().toString(36).substring(2, 10).toUpperCase()}</span>
+            </div>
+            
             <div className="flex gap-2">
               <Link to="/pricing">
                 <button 
@@ -163,6 +168,23 @@ const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
 
         </div>
       </main>
+
+      <footer className="mt-12 border-t border-border/40 bg-background/40 py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-primary/60" />
+              <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">© 2026 E-Vara Security Systems. Built for operational awareness.</span>
+            </div>
+            <div className="flex gap-6 text-[10px] font-mono uppercase text-muted-foreground tracking-tighter">
+              <button className="hover:text-primary transition-colors">Terminals of Service</button>
+              <button className="hover:text-primary transition-colors">Privacy Protocol</button>
+              <button className="hover:text-primary transition-colors">API Documentation</button>
+              <button className="hover:text-primary transition-colors">Network Status</button>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
