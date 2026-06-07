@@ -9,9 +9,14 @@ if (import.meta.env.DEV && (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY)) {
   console.warn("E-VARA: Missing Environment Variables. Falling back to local development mocks.");
 }
 
-// Strictly use local mock if URL is missing to avoid "Shadow Infrastructure" risks
+/**
+ * Enterprise-grade environment detection.
+ * Centralizes 'Demo Mode' logic to avoid duplication across components.
+ */
+export const isSimulationMode = !SUPABASE_URL || SUPABASE_URL.includes("placeholder") || !SUPABASE_PUBLISHABLE_KEY;
+
 export const supabase = createClient<Database>(
-  SUPABASE_URL || "http://127.0.0.1:54321", // Standard local Supabase CLI URL
+  SUPABASE_URL || "http://127.0.0.1:54321", 
   SUPABASE_PUBLISHABLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.local-mock"
 );
 
@@ -19,7 +24,7 @@ export const supabase = createClient<Database>(
  * Health check to verify if the infrastructure is reachable.
  */
 export const checkInfrastructure = async (): Promise<boolean> => {
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) return false;
+  if (isSimulationMode) return false;
   try {
     const { error } = await supabase.from('monitored_identities' as any).select('count', { count: 'exact', head: true }).limit(1);
     return !error;

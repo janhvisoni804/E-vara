@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import CyberDashboardLoader from "@/components/CyberDashboardLoader";
+import { useAuth } from "@/hooks/useAuth";
+
 import NotFound from "./pages/NotFound.tsx";
 import PricingPage from "./pages/Pricing.tsx";
-
 import LandingPage from "./pages/Landing.tsx";
 import AuthPage from "./pages/AuthPage.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
@@ -17,54 +17,69 @@ import IdentityRecords from "./pages/IdentityRecords.tsx";
 import BillingPage from "./pages/Billing.tsx";
 import SupportPage from "./pages/Support.tsx";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthed, setIsAuthed] = useState(() => !!localStorage.getItem("evara-session"));
+const AppRouter = () => {
+  const { user, loading, logout } = useAuth();
 
-  useEffect(() => {
-    // Simulate loading for 2 seconds
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleAuth = () => setIsAuthed(true);
-  const handleLogout = () => setIsAuthed(false);
+  if (loading) return <CyberDashboardLoader />;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        {isLoading && <CyberDashboardLoader />}
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/book-demo" element={<BookDemo />} />
-            <Route path="/client-portal" element={<ClientPortal />} />
-            <Route path="/identity-records" element={<IdentityRecords />} />
-            <Route path="/billing" element={<BillingPage />} />
-            <Route path="/support" element={<SupportPage />} />
-            <Route 
-              path="/auth" 
-              element={isAuthed ? <Dashboard onLogout={handleLogout} /> : <AuthPage onAuth={handleAuth} />} 
-            />
-            <Route 
-              path="/dashboard" 
-              element={isAuthed ? <Dashboard onLogout={handleLogout} /> : <AuthPage onAuth={handleAuth} />} 
-            />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/book-demo" element={<BookDemo />} />
+        
+        {/* Protected Routes */}
+        <Route 
+          path="/client-portal" 
+          element={user ? <ClientPortal /> : <Navigate to="/auth" />} 
+        />
+        <Route 
+          path="/identity-records" 
+          element={user ? <IdentityRecords /> : <Navigate to="/auth" />} 
+        />
+        <Route 
+          path="/billing" 
+          element={user ? <BillingPage /> : <Navigate to="/auth" />} 
+        />
+        <Route 
+          path="/support" 
+          element={user ? <SupportPage /> : <Navigate to="/auth" />} 
+        />
+        <Route 
+          path="/dashboard" 
+          element={user ? <Dashboard onLogout={logout} /> : <Navigate to="/auth" />} 
+        />
+
+        {/* Auth Route */}
+        <Route 
+          path="/auth" 
+          element={user ? <Navigate to="/dashboard" /> : <AuthPage onAuth={() => {}} />} 
+        />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <AppRouter />
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;

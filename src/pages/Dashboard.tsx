@@ -20,13 +20,18 @@ import AIInsightPanel from "@/components/AIInsightPanel";
 import NetworkTraffic from "@/components/NetworkTraffic";
 
 const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
-  const { user, logout, getIdentity, saveIdentity } = useAuth();
-  const [identity, setIdentity] = useState(getIdentity());
+  const { user, identity, logout, saveIdentity } = useAuth();
   const [showHistory, setShowHistory] = useState(false);
   const [booting, setBooting] = useState(true);
 
+  // Deterministic NODE_ID based on user.id
+  const nodeId = useMemo(() => {
+    if (!user?.id) return "INITIALIZING";
+    return `NODE-${user.id.substring(0, 8).toUpperCase()}`;
+  }, [user]);
+
   useEffect(() => {
-    const timer = setTimeout(() => setBooting(false), 3000);
+    const timer = setTimeout(() => setBooting(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -36,21 +41,13 @@ const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
   };
 
   const handleFaceComplete = useCallback((imageData: string) => {
-    const current = getIdentity();
-    const updated = { 
-      ...(current || { fullName: "", username: "", socialLink: "", keywords: "" }), 
-      faceImage: imageData 
-    };
-    saveIdentity(updated);
-    setIdentity(updated);
-  }, [getIdentity, saveIdentity]);
+    if (!identity) return;
+    saveIdentity({ ...identity, faceImage: imageData });
+  }, [identity, saveIdentity]);
 
   const handleIdentitySave = useCallback((data: any) => {
-    const current = getIdentity();
-    const updated = { ...data, faceImage: current?.faceImage || null };
-    saveIdentity(updated);
-    setIdentity(updated);
-  }, [getIdentity, saveIdentity]);
+    saveIdentity({ ...data, faceImage: identity?.faceImage || null });
+  }, [identity, saveIdentity]);
 
   if (booting) return <CyberDashboardLoader />;
 
@@ -81,7 +78,7 @@ const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
             
             <div className="hidden lg:flex flex-col items-end mr-4 border-l border-border/40 pl-4">
               <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Kernel v2.4.1-STABLE</span>
-              <span className="text-[9px] font-mono text-primary/50">NODE_ID: {Math.random().toString(36).substring(2, 10).toUpperCase()}</span>
+              <span className="text-[9px] font-mono text-primary/50">NODE_ID: {nodeId}</span>
             </div>
             
             <div className="flex gap-2">
