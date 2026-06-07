@@ -39,6 +39,7 @@ interface ToolsPanelProps {
 
 const ToolsPanel = ({ identity }: ToolsPanelProps) => {
   const [scanning, setScanning] = useState(false);
+  const [scanStep, setScanStep] = useState("");
   const [scanResults, setScanResults] = useState<ScanResponse | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
 
@@ -48,28 +49,49 @@ const ToolsPanel = ({ identity }: ToolsPanelProps) => {
     setScanError(null);
     setScanResults(null);
 
+    const steps = [
+      "Connecting to HaveIBeenPwned API...",
+      "Querying DeHashed Indexed Datasets...",
+      "Analyzing IntelX Dark Web Archives...",
+      "Checking LeakCheck Global Repositories...",
+      "Correlating found identity markers...",
+      "Generating Security Audit Dossier..."
+    ];
+
     // Check if we are in Demo Mode (missing keys)
     const isDemoMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes("placeholder");
 
     try {
+      for (const step of steps) {
+        setScanStep(step);
+        await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+      }
+
       if (isDemoMode) {
-        await new Promise(r => setTimeout(r, 2000)); // Simulate deep scan
         setScanResults({
           results: [
             {
               source: "HaveIBeenPwned",
               breachName: "LinkedIn 2021",
               breachDate: "2021-06-22",
-              dataTypes: ["email", "name", "phone"],
+              dataTypes: ["email", "name", "phone", "job_title"],
               severity: "high",
-              description: "Official LinkedIn data scrap and leak."
+              description: "Official LinkedIn data scrap and leak. Metadata suggests high correlation with target profile."
+            },
+            {
+              source: "DeHashed",
+              breachName: "Adobe 2013",
+              breachDate: "2013-10-04",
+              dataTypes: ["email", "password_hint"],
+              severity: "medium",
+              description: "Legacy account credentials detected. Potential for credential stuffing on modern platforms."
             }
           ],
           summary: {
-            totalBreaches: 1,
+            totalBreaches: 2,
             sourcesChecked: 5,
             highSeverity: 1,
-            mediumSeverity: 0,
+            mediumSeverity: 1,
             lowSeverity: 0
           },
           scannedAt: new Date().toISOString()
@@ -163,7 +185,7 @@ const ToolsPanel = ({ identity }: ToolsPanelProps) => {
               {scanning ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Scanning databases...
+                  <span className="text-[10px] uppercase truncate">{scanStep}</span>
                 </>
               ) : (
                 <>

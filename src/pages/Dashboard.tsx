@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import DigitalFootprintMap from "@/components/DigitalFootprintMap";
 import AttackSimulationPanel from "@/components/AttackSimulationPanel";
 import AIInsightPanel from "@/components/AIInsightPanel";
+import NetworkTraffic from "@/components/NetworkTraffic";
 
 const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
   const { user, logout, getIdentity, saveIdentity } = useAuth();
@@ -161,7 +162,12 @@ const Dashboard = ({ onLogout }: { onLogout: () => void }) => {
                   <DigitalFootprintMap username={identity?.username || "identity"} />
                   <AttackSimulationPanel email={identity?.email || "classified"} />
                 </div>
-                <AIInsightPanel score={65} alertCount={0} />
+                <div className="grid gap-6 lg:grid-cols-3">
+                  <div className="lg:col-span-2">
+                    <NetworkTraffic />
+                  </div>
+                  <AIInsightPanel score={65} alertCount={0} />
+                </div>
               </TabsContent>
             </Tabs>
           </div>
