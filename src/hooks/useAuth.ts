@@ -16,6 +16,7 @@ export interface IdentityInfo {
 export interface UserProfile {
   tier: SubscriptionTier;
   node_id_stable: string;
+  billing_status: string;
 }
 
 export function useAuth() {
@@ -32,31 +33,28 @@ export function useAuth() {
   });
 
   // 2. Secure Profile & Tier Query (Source of Truth for Authorization)
-  const { data: profile } = useQuery({
+  const { data: profile } = useQuery<UserProfile | null>({
     queryKey: ["user-profile", user?.id],
-    queryFn: async (): Promise<UserProfile | null> => {
+    queryFn: async () => {
       if (!user) return null;
-      if (isSimulationMode) return { tier: 'executive', node_id_stable: `NODE-${user.id.substring(0, 8).toUpperCase()}` };
+      if (isSimulationMode) return { tier: 'executive', node_id_stable: `NODE-LOCAL-001`, billing_status: 'active' };
 
       const { data, error } = await supabase
-        .from('user_profiles' as any)
-        .select('tier, node_id_stable')
+        .from('user_profiles')
+        .select('tier, node_id_stable, billing_status')
         .eq('id', user.id)
         .single();
       
-      if (error) {
-        console.error("Critical: Failed to verify subscription tier.");
-        return { tier: 'tactical', node_id_stable: "NODE_AUTH_PENDING" };
-      }
+      if (error) return { tier: 'tactical', node_id_stable: "NODE_STABLE", billing_status: 'active' };
       return data as UserProfile;
     },
     enabled: !!user,
   });
 
   // 3. Identity Query (Fetch PII from Database)
-  const { data: identity, isLoading: loadingIdentity } = useQuery({
+  const { data: identity, isLoading: loadingIdentity } = useQuery<IdentityInfo | null>({
     queryKey: ["identity", user?.id],
-    queryFn: async (): Promise<IdentityInfo | null> => {
+    queryFn: async () => {
       if (!user) return null;
       if (isSimulationMode) {
          const local = localStorage.getItem(`evara-identity-${user.id}`);
@@ -64,20 +62,20 @@ export function useAuth() {
       }
       
       const { data, error } = await supabase
-        .from('monitored_identities' as any)
-        .select('*')
+        .from('monitored_identities')
+        .select('full_name, identity_value_encrypted')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
       
-      if (error && error.code !== 'PGRST116') throw error;
-      return data ? {
-        fullName: (data as any).full_name || "",
-        username: (data as any).identity_value_encrypted || "",
-        email: (data as any).identity_value_encrypted || "",
+      if (error) return null;
+      return {
+        fullName: data.full_name || "",
+        username: data.identity_value_encrypted,
+        email: data.identity_value_encrypted,
         faceImage: null
-      } : null;
+      };
     },
     enabled: !!user,
   });
@@ -97,14 +95,14 @@ export function useAuth() {
     if (isSimulationMode) {
        localStorage.setItem(`evara-identity-${user.id}`, JSON.stringify(info));
     } else {
-       const { error } = await supabase.from('monitored_identities' as any).upsert({
+       const { error } = await supabase.from('monitored_identities').upsert({
          user_id: user.id,
          identity_type: 'email',
          identity_value_encrypted: info.email,
-         identity_hash: hashedEmail, // ACTUAL SHA-256 ENFORCED
+         identity_hash: hashedEmail,
          full_name: info.fullName,
          is_active: true
-       } as any);
+       });
        if (error) throw error;
     }
     
