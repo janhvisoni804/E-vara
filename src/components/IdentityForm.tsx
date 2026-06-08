@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { User, ShieldCheck, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, isSimulationMode } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { sha256 } from "@/lib/crypto";
+
+export interface IdentityData {
+  email: string;
+  username: string;
+  fullName: string;
+}
 
 interface IdentityFormProps {
-  onSave?: (data: any) => void;
-  initial?: any | null;
+  onSave?: (data: IdentityData) => void;
+  initial?: Partial<IdentityData> | null;
 }
 
 const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
-  const { user } = useAuth();
+  const { user, saveIdentity } = useAuth();
   const [email, setEmail] = useState(initial?.email || user?.email || "");
   const [username, setUsername] = useState(initial?.username || "");
   const [fullName, setFullName] = useState(initial?.fullName || "");
@@ -21,58 +28,43 @@ const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
     if (!user) return;
 
     setLoading(true);
+    
     try {
-      // 1. Register or update the identity in public.monitored_identities
-      const identity_hash = btoa(email).slice(0, 32); 
+      // 1. Cryptographic Integrity: Hash before persistence
+      const identity_hash = await sha256(email); 
 
-      let identityData;
-      try {
-        const { data, error } = await supabase
-          .from('monitored_identities' as any)
-          .upsert({
-            user_id: user.id,
-            identity_type: 'email',
-            identity_value_encrypted: email,
-            identity_hash: identity_hash,
-            is_active: true
-          } as any)
-          .select()
-          .single();
-        
-        if (error) throw error;
-        identityData = data;
-      } catch (dbError: any) {
-        console.warn("Supabase Database unreachable:", dbError.message);
-        throw new Error("Supabase infrastructure is currently unreachable. Please check your VITE_SUPABASE_URL and verify the project is active.");
+      if (isSimulationMode) {
+        await new Promise(r => setTimeout(r, 1000));
+        toast.info("Synthetic Node Active", {
+          description: "Simulation environment verified. Persisting ephemeral identity."
+        });
+        if (onSave) onSave({ email, username, fullName });
+        return;
       }
 
-      // 2. Trigger the breach check edge function
-      try {
-        const { data: scanResult, error: scanError } = await supabase.functions.invoke('breach-check', {
-          body: { 
-            identityId: (identityData as any).id, 
-            identityValue: email, 
-            userId: user.id 
-          }
-        });
+      // 2. Real Persistence via useAuth (which now enforces hashing and Postgres RLS)
+      await saveIdentity({ email, username, fullName, faceImage: null });
 
-        if (scanError) throw scanError;
+      // 3. Trigger Intelligence Engine
+      const { data: scanResult, error: scanError } = await supabase.functions.invoke('breach-check', {
+        body: { 
+          identityValue: email, 
+          userId: user.id 
+        }
+      });
 
-        toast.success("Identity monitoring active", {
-          description: `Found ${scanResult.count} historical data breaches.`
-        });
-      } catch (funcError: any) {
-        console.warn("Supabase Functions unreachable:", funcError.message);
-        toast.warning("Identity registered locally", {
-          description: "Could not trigger remote scanner. Real-time monitoring may be delayed."
-        });
-      }
+      if (scanError) throw scanError;
+
+      toast.success("Identity monitoring active", {
+        description: `Analysis complete. Found ${scanResult.count} data markers.`
+      });
 
       if (onSave) onSave({ email, username, fullName });
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error;
       console.error("Identity registration failed:", error);
-      toast.error("Infrastructure Connection Error", {
-        description: error.message
+      toast.error("Operational Error", {
+        description: "Failed to establish identity link. Check network status."
       });
     } finally {
       setLoading(false);
@@ -93,7 +85,7 @@ const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
         </div>
         <div>
           <h3 className="text-sm font-bold text-foreground uppercase tracking-[0.2em]">Identity Intelligence</h3>
-          <p className="text-[10px] text-muted-foreground uppercase">Configure your monitoring targets</p>
+          <p className="text-[10px] text-muted-foreground uppercase">Configure monitoring targets</p>
         </div>
       </div>
 
@@ -139,10 +131,10 @@ const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
           {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Initializing Scanners...
+              Establishing Link...
             </>
           ) : (
-            "Activate Intelligence"
+            "Verify & Activate"
           )}
         </button>
       </form>
