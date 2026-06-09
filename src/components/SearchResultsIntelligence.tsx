@@ -34,33 +34,37 @@ export const SearchResultsIntelligence = ({
         body: { fullName, username, engine: searchEngine }
       });
 
-      let results = [];
+      const safeHandle = username.split('@')[0];
+      const mockResults = [
+        { title: `${fullName} Public Profile`, link: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(fullName)}`, snippet: `View the professional footprint of ${fullName} on LinkedIn...` },
+        { title: `@${safeHandle} | Twitter Search`, link: `https://twitter.com/search?q=${encodeURIComponent(safeHandle)}`, snippet: `Latest mentions and tweets from @${safeHandle}...` },
+        { title: `${safeHandle} | Instagram Search`, link: `https://www.instagram.com/explore/search/keyword/?q=${encodeURIComponent(safeHandle)}`, snippet: `Visual media and social tags for ${safeHandle}...` },
+        { title: `${fullName} | Facebook Public Data`, link: `https://www.facebook.com/search/top?q=${encodeURIComponent(fullName)}`, snippet: `Public graph data matching ${fullName}...` },
+        { title: `${safeHandle} | GitHub Repositories`, link: `https://github.com/search?q=${encodeURIComponent(safeHandle)}&type=users`, snippet: `Code contributions and tech footprint for ${safeHandle}...` }
+      ];
 
       if (funcError) {
         // Fallback to mock data when offline/failed
-        results = [
-          { title: `${fullName} Public Profile`, link: `https://www.google.com/search?q=site:linkedin.com/in+${encodeURIComponent(fullName)}`, snippet: `View the professional profile of ${fullName}...` },
-          { title: `@${username.split('@')[0]} | Twitter`, link: `https://www.google.com/search?q=site:twitter.com+${encodeURIComponent(username.split('@')[0])}`, snippet: `Latest tweets from ${fullName} (@${username.split('@')[0]})...` }
-        ];
+        results = mockResults;
       } else {
         results = data?.results || [];
       }
 
       // If the endpoint is not fully implemented or returns no data, handle it gracefully
       if (results.length === 0) {
-         results = [
-          { title: `${fullName} Public Profile`, link: `https://www.google.com/search?q=site:linkedin.com/in+${encodeURIComponent(fullName)}`, snippet: `View the professional profile of ${fullName}...` },
-          { title: `@${username.split('@')[0]} | Twitter`, link: `https://www.google.com/search?q=site:twitter.com+${encodeURIComponent(username.split('@')[0])}`, snippet: `Latest tweets from ${fullName} (@${username.split('@')[0]})...` }
-        ];
+         results = mockResults;
       }
 
       const result = analyzeSearchResults(results, fullName, username, 10);
       setAnalysisResult(result);
       
     } catch (err: unknown) {
+      const safeHandle = username.split('@')[0];
       // In case of any other unexpected error, still provide mock data so the demo works
       const results = [
-        { title: `${fullName} Public Profile`, link: `https://www.google.com/search?q=site:linkedin.com/in+${encodeURIComponent(fullName)}`, snippet: `View the professional profile of ${fullName}...` },
+        { title: `${fullName} Public Profile`, link: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(fullName)}`, snippet: `View the professional footprint of ${fullName} on LinkedIn...` },
+        { title: `@${safeHandle} | Twitter Search`, link: `https://twitter.com/search?q=${encodeURIComponent(safeHandle)}`, snippet: `Latest mentions and tweets from @${safeHandle}...` },
+        { title: `${safeHandle} | Instagram Search`, link: `https://www.instagram.com/explore/search/keyword/?q=${encodeURIComponent(safeHandle)}`, snippet: `Visual media and social tags for ${safeHandle}...` },
       ];
       const result = analyzeSearchResults(results, fullName, username, 10);
       setAnalysisResult(result);
