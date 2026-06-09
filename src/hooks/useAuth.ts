@@ -106,7 +106,7 @@ export function useAuth() {
         throw error;
       }
       let decodedEmail = data.identity_value_encrypted;
-      try { decodedEmail = atob(data.identity_value_encrypted); } catch (e) {}
+      try { decodedEmail = atob(data.identity_value_encrypted); } catch (e) { /* ignore invalid base64 */ }
 
       return {
         fullName: data.full_name || "",
@@ -120,7 +120,7 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     localStorage.removeItem('e_vara_demo_auth');
-    await supabase.auth.signOut().catch(() => {});
+    await supabase.auth.signOut().catch(() => null);
     queryClient.clear();
     toast.success("Session Terminated");
   }, [queryClient]);
