@@ -37,12 +37,20 @@ const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
       await saveIdentity({ email, username, fullName, faceImage: null });
 
       // 3. Trigger Intelligence Engine
-      const { data: scanResult, error: scanError } = await supabase.functions.invoke('breach-check', {
-        body: { 
-          identityValue: email, 
-          userId: user.id 
-        }
-      });
+      let scanResult = null;
+      let scanError = null;
+      try {
+        const res = await supabase.functions.invoke('breach-check', {
+          body: { 
+            identityValue: email, 
+            userId: user.id 
+          }
+        });
+        scanResult = res.data;
+        scanError = res.error;
+      } catch (e) {
+        scanError = e;
+      }
 
       let resultCount = 0;
       if (scanError) {
