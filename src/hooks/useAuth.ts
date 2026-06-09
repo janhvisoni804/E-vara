@@ -84,6 +84,12 @@ export function useAuth() {
       if (!user) return null;
       
       if (user.id === DEMO_USER.id) {
+        const cached = localStorage.getItem('e_vara_demo_identity');
+        if (cached) {
+          try {
+            return JSON.parse(cached);
+          } catch (e) { /* ignore */ }
+        }
         return {
           fullName: "Demo User",
           username: DEMO_USER.email,
@@ -120,6 +126,7 @@ export function useAuth() {
 
   const logout = useCallback(async () => {
     localStorage.removeItem('e_vara_demo_auth');
+    localStorage.removeItem('e_vara_demo_identity');
     await supabase.auth.signOut().catch(() => null);
     queryClient.clear();
     toast.success("Session Terminated");
@@ -132,6 +139,7 @@ export function useAuth() {
     const hashedEmail = await sha256(info.email);
 
     if (user.id === DEMO_USER.id) {
+      localStorage.setItem('e_vara_demo_identity', JSON.stringify(info));
       toast.success("Identity saved (Demo Mode)");
       queryClient.invalidateQueries({ queryKey: ["identity", user.id] });
       return;
