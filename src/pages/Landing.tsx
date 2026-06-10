@@ -79,12 +79,12 @@ const LandingPage = () => {
         <section className="py-40 container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
              <div>
-                <h2 className="text-6xl lg:text-8xl font-bold tracking-tighter mb-10 leading-[0.85]">The Digital <br /> <span className="text-[#007AFF] italic">Trust</span> Crisis</h2>
+                <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-10 leading-[0.85]">The Digital <br /> <span className="text-[#007AFF] italic">Trust</span> Crisis</h2>
                 <p className="text-2xl text-white/40 font-light leading-relaxed mb-12 max-w-xl">
                    Generative AI has weaponized digital identity. 
                    Organizations and individuals are now targets of 900% more sophisticated deepfakes than in 2024.
                 </p>
-                <div className="grid grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
                    <div className="p-10 rounded-[32px] bg-white/[0.02] border border-white/10 backdrop-blur-xl">
                       <p className="text-5xl font-bold text-[#007AFF] mb-3">900%</p>
                       <p className="text-[11px] font-mono text-white/40 uppercase tracking-widest">Deepfake Growth_</p>

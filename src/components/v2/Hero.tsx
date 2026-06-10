@@ -20,18 +20,18 @@ const Hero = () => {
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8"
             >
               <div className="w-2 h-2 rounded-full bg-electric-blue animate-pulse" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-white/60">AI_MONITORING_ACTIVE</span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#007AFF]">CRISIS_RADAR_ACTIVE</span>
             </motion.div>
 
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.9] text-white mb-8"
+              className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.9] text-white mb-8"
             >
-              Protecting Digital <br />
-              <span className="text-electric-blue italic">Identity</span> in the <br />
-              Age of AI
+              Catch Deepfakes <br />
+              Before They Go <br />
+              <span className="text-[#007AFF] italic">Viral</span>
             </motion.h1>
 
             <motion.p
@@ -40,8 +40,7 @@ const Hero = () => {
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
               className="text-lg lg:text-xl text-white/40 font-light max-w-lg mb-12 leading-relaxed"
             >
-              Real-time detection of morphed, manipulated, and AI-generated content. 
-              The ultimate defense layer for personal and organizational reputation.
+              E-VARA is the early-warning radar for PR firms and high-profile executives. We detect synthetic media and coordinated smear campaigns in dark channels before they hit the mainstream.
             </motion.p>
 
             <motion.div
@@ -51,13 +50,13 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-4"
             >
               <Link to="/book-demo">
-                <button className="px-8 py-4 rounded-full bg-white text-black font-bold text-sm uppercase tracking-widest hover:bg-electric-blue hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
-                  Request Demo <ChevronRight className="w-4 h-4" />
+                <button className="px-8 py-4 rounded-full bg-[#007AFF] text-white font-bold text-sm uppercase tracking-widest hover:bg-[#007AFF]/80 transition-all duration-300 flex items-center justify-center gap-2">
+                  Request Agency Audit <ChevronRight className="w-4 h-4" />
                 </button>
               </Link>
-              <Link to="/threat-detection">
+              <Link to="/pricing">
                 <button className="px-8 py-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-white font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
-                  <Play className="w-3 h-3 fill-white" /> Explore Technology
+                  View Intelligence Services
                 </button>
               </Link>
             </motion.div>
@@ -67,12 +66,12 @@ const Hero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="mt-16 grid grid-cols-3 gap-8 border-t border-white/5 pt-8"
+              className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 border-t border-white/5 pt-8"
             >
               {[
-                { label: "Active Monitors", val: "2.4M+" },
-                { label: "AI Classification", val: "99.9%" },
-                { label: "Latency", val: "<12ms" },
+                { label: "Dark Networks Monitored", val: "4,500+" },
+                { label: "False Positive Rate", val: "0.0%" },
+                { label: "Early Warning Lead Time", val: "24-48h" },
               ].map((stat, i) => (
                 <div key={i}>
                   <p className="text-2xl font-bold text-white mb-1 tracking-tighter">{stat.val}</p>
