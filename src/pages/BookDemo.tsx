@@ -26,7 +26,8 @@ const BookDemo = () => {
     e.preventDefault();
     setLoading(true);
 
-    const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    const rawKey = import.meta.env.VITE_WEB3FORMS_KEY || "";
+    const accessKey = rawKey.replace(/[\"']/g, '').trim();
 
     if (!accessKey) {
       console.warn("No Web3Forms key found. Simulating submission.");
