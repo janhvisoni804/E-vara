@@ -4,6 +4,7 @@ import { Shield, Calendar, Users, Building, Mail, ChevronRight, CheckCircle2, Gl
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useSEO } from "@/hooks/useSEO";
+import { supabase } from "@/integrations/supabase/client";
 
 const BookDemo = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -26,38 +27,22 @@ const BookDemo = () => {
     e.preventDefault();
     setLoading(true);
 
-    const rawKey = import.meta.env.VITE_WEB3FORMS_KEY || "";
-    const accessKey = rawKey.replace(/[\"']/g, '').trim();
-
-    if (!accessKey) {
-      console.warn("No Web3Forms key found. Simulating submission.");
-      await new Promise(r => setTimeout(r, 2000));
-      setLoading(false);
-      setSubmitted(true);
-      return;
-    }
-
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          subject: `New Agency Demo Request from ${formData.organization}`,
-          from_name: "E-VARA Intelligence Radar",
-          ...formData
-        }),
+      const { error } = await supabase.from('agency_leads').insert({
+        name: formData.name,
+        email: formData.email,
+        organization: formData.organization,
+        timeframe: formData.timeframe
       });
 
-      if (response.status === 200) {
-        setSubmitted(true);
+      if (error) {
+        console.error("Supabase Error:", error);
+        alert(`Transmission failed: ${error.message}`);
       } else {
-        alert("Transmission failed. Please try again or contact support directly.");
+        setSubmitted(true);
       }
     } catch (error) {
+      console.error(error);
       alert("Network protocol error. Check your connection.");
     } finally {
       setLoading(false);
