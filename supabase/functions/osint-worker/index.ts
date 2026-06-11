@@ -29,14 +29,17 @@ serve(async (req) => {
     .select('*')
     .limit(10);
 
-  if (claimError || !jobs || jobs.length === 0) {
-    return new Response(JSON.stringify({ status: 'idle', count: 0 }), { status: 200 })
+  if (claimError) {
+    console.error('Failed to claim jobs:', claimError);
+    return new Response(JSON.stringify({ error: claimError }), { status: 500 });
+  }
+
+  if (!jobs || jobs.length === 0) {
+    return new Response(JSON.stringify({ message: 'No pending jobs' }), { status: 200 });
   }
 
   const osintApiKey = Deno.env.get('EXTERNAL_OSINT_API_KEY');
-  let processed = 0;
 
-  // 2. Process Jobs
   for (const job of jobs) {
     try {
       if (!osintApiKey) {
@@ -44,9 +47,9 @@ serve(async (req) => {
       }
 
       // Simulated external call
-      const osintRes = await fetch(\https://api.external-osint-provider.com/v1/search?hash=\\, {
+      const osintRes = await fetch(`https://api.external-osint-provider.com/v1/search?hash=${job.identity_hash}`, {
         headers: {
-          'Authorization': \Bearer \\,
+          'Authorization': `Bearer ${osintApiKey}`,
           'Accept': 'application/json'
         }
       });
@@ -55,42 +58,47 @@ serve(async (req) => {
         throw new Error('API_UNAVAILABLE');
       }
 
-      const osintData = await osintRes.json();
-      const findings = [];
+      const findings = await osintRes.json();
 
-      if (osintData.breaches && Array.isArray(osintData.breaches)) {
-        for (const breach of osintData.breaches) {
-          findings.push({
-            user_id: job.user_id,
-            source_name: breach.source || 'Dark Web',
-            leak_date: breach.leak_date || new Date().toISOString().split('T')[0],
-            severity: breach.severity || 'medium',
-            description: breach.description || 'Exposed records found.'
-          });
-        }
-      }
+      // Ensure jobs array is typed as jsonb
+      const { error: insertError } = await supabase
+        .from('identity_breaches')
+        .insert(findings.map((f: Record<string, unknown>) => ({
+          user_id: job.user_id,
+          identity_id: job.identity_id,
+          source_name: f.source,
+          severity: f.severity,
+          data_types: f.data_types,
+          leak_date: f.date
+        })));
 
-      if (findings.length > 0) {
-        await supabase.from('identity_breaches').insert(findings);
-      }
+      if (insertError) throw insertError;
 
-      // Mark complete
-      await supabase.from('osint_jobs').update({ status: 'completed' }).eq('id', job.id);
-      processed++;
+      // Mark completed
+      await supabase
+        .from('osint_jobs')
+        .update({ 
+          status: 'completed', 
+          completed_at: new Date().toISOString(),
+          locked_by: null,
+          lease_expiry_at: null
+        })
+        .eq('id', job.id);
 
-    } catch (err) {
-      // Exponential Backoff
-      const nextRun = new Date(Date.now() + (Math.pow(2, job.attempts) * 60000));
-      await supabase.from('osint_jobs').update({ 
-        status: job.attempts >= 3 ? 'failed' : 'pending',
-        attempts: job.attempts + 1,
-        next_run_at: nextRun.toISOString(),
-        error_log: err.message,
-        locked_by: null,
-        locked_at: null
-      }).eq('id', job.id);
+    } catch (error: unknown) {
+      const e = error as Error;
+      // Exponential backoff handled by Reaper, but we can set pending here if we catch it
+      await supabase
+        .from('osint_jobs')
+        .update({ 
+          status: 'pending', 
+          locked_by: null,
+          lease_expiry_at: null,
+          error_log: e.message
+        })
+        .eq('id', job.id);
     }
   }
 
-  return new Response(JSON.stringify({ status: 'processed', count: processed }), { status: 200 })
+  return new Response(JSON.stringify({ processed: jobs.length }), { status: 200 });
 })

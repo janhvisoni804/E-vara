@@ -28,8 +28,9 @@ export const EmergencyLockdown = () => {
       // Redirect to home/login
       window.location.href = '/';
       
-    } catch (error: any) {
-      toast.error('Lockdown failed', { description: error.message });
+    } catch (error: unknown) {
+      const e = error as Error;
+      toast.error('Lockdown failed', { description: e.message });
       setIsLocking(false);
     }
   };

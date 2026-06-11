@@ -21,7 +21,7 @@ export const useDeviceIntegrity = () => {
       let currentScore = 50; // Base score
       const factors: string[] = [];
       let passkeySupported = false;
-      let secureEnclave = false;
+      const secureEnclave = false;
 
       // 1. Check WebAuthn / Passkey Support
       if (window.PublicKeyCredential) {

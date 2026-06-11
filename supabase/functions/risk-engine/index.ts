@@ -50,7 +50,7 @@ serve(async (req) => {
         else breachDeduction -= 2;
       });
       score += breachDeduction;
-      factors.push({ impact: breachDeduction, description: \\ Exposures Detected\, type: 'negative' });
+      factors.push({ impact: breachDeduction, description: `${breaches.length} Exposures Detected`, type: 'negative' });
       confidence -= 5;
     }
 
@@ -59,14 +59,14 @@ serve(async (req) => {
       const untrustedCount = devices.filter(d => !d.is_trusted).length;
       if (untrustedCount > 0) {
         score -= (untrustedCount * 10);
-        factors.push({ impact: -(untrustedCount * 10), description: \\ Untrusted Devices\, type: 'negative' });
+        factors.push({ impact: -(untrustedCount * 10), description: `${untrustedCount} Untrusted Devices`, type: 'negative' });
         confidence -= 10;
       }
       
       const trustedCount = devices.length - untrustedCount;
       if (trustedCount > 0) {
         score += 5;
-        factors.push({ impact: +5, description: \\ Trusted Devices\, type: 'positive' });
+        factors.push({ impact: +5, description: `${trustedCount} Trusted Devices`, type: 'positive' });
       }
     }
 
@@ -93,11 +93,11 @@ serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     )
 
-  } catch (error) {
+  } catch (error: unknown) {
+    const e = error as Error;
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: e.message }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
     )
   }
 })
-

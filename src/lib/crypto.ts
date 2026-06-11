@@ -1,4 +1,4 @@
-export const encryptCache = async (data: any, key: string): Promise<string> => {
+export const encryptCache = async (data: unknown, key: string): Promise<string> => {
   const encoder = new TextEncoder();
   const dataString = JSON.stringify(data);
   const dataBuffer = encoder.encode(dataString);
@@ -16,7 +16,7 @@ export const encryptCache = async (data: any, key: string): Promise<string> => {
   return btoa(String.fromCharCode(...combined));
 };
 
-export const decryptCache = async (encryptedBase64: string, key: string): Promise<any> => {
+export const decryptCache = async (encryptedBase64: string, key: string): Promise<unknown> => {
   try {
     const combined = new Uint8Array(atob(encryptedBase64).split('').map(c => c.charCodeAt(0)));
     const iv = combined.slice(0, 12);
@@ -32,4 +32,11 @@ export const decryptCache = async (encryptedBase64: string, key: string): Promis
     console.error('Cache decryption failed', e);
     return null;
   }
+};
+
+export const sha256 = async (message: string): Promise<string> => {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 };

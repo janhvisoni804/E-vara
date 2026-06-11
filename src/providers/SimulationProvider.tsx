@@ -4,7 +4,7 @@ interface SimulationContextType {
   isSimulationMode: boolean;
   enableSimulation: () => void;
   disableSimulation: () => void;
-  getSimulatedFindings: (userId: string, identityId: string) => any[];
+  getSimulatedFindings: (userId: string, identityId: string) => Record<string, unknown>[];
 }
 
 const SimulationContext = createContext<SimulationContextType | undefined>(undefined);

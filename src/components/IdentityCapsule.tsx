@@ -34,7 +34,7 @@ export const IdentityCapsule = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = \e-vara_capsule_\.json\;
+      a.download = 'e-vara_capsule_' + new Date().getTime() + '.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

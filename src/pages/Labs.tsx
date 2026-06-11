@@ -24,7 +24,7 @@ const Labs = () => {
           </div>
           <button 
             onClick={toggleFreeze}
-            className={px-4 py-2 rounded font-medium }
+            className={`px-4 py-2 rounded font-medium ${freezeState ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}
           >
             {freezeState ? 'FROZEN' : 'ACTIVE'}
           </button>
@@ -38,7 +38,7 @@ const Labs = () => {
               <button
                 key={m}
                 onClick={() => setMode(m)}
-                className={p-4 rounded-lg border text-left transition-colors }
+                className={`p-4 rounded-lg border text-left transition-colors ${mode === m ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400' : 'border-gray-800 bg-gray-900/30 text-gray-400 hover:border-gray-600'}`}
               >
                 <div className="font-bold capitalize mb-1">{m}</div>
                 <div className="text-xs opacity-70">
@@ -58,9 +58,9 @@ const Labs = () => {
                 <span className="font-medium">{key}</span>
                 <button
                   onClick={() => toggleFeature(key as keyof typeof features)}
-                  className={w-12 h-6 rounded-full transition-colors relative }
+                  className={`w-12 h-6 rounded-full transition-colors relative ${isEnabled ? 'bg-cyan-500' : 'bg-gray-700'}`}
                 >
-                  <span className={bsolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform } />
+                  <span className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${isEnabled ? 'translate-x-6' : ''}`} />
                 </button>
               </div>
             ))}
@@ -78,4 +78,3 @@ const Labs = () => {
 };
 
 export default Labs;
-
