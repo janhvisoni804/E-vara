@@ -1,7 +1,9 @@
+import React, { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, Play } from "lucide-react";
 import { Link } from "react-router-dom";
-import CyberGlobe from "./CyberGlobe";
+
+const CyberGlobe = lazy(() => import("./CyberGlobe"));
 
 const Hero = () => {
   return (
@@ -38,7 +40,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-              className="text-lg lg:text-xl text-white/40 font-light max-w-lg mb-12 leading-relaxed"
+              className="text-lg lg:text-xl text-white/60 font-light max-w-lg mb-12 leading-relaxed"
             >
               E-VARA is the early-warning radar for PR firms and high-profile executives. We detect synthetic media and coordinated smear campaigns in dark channels before they hit the mainstream.
             </motion.p>
@@ -75,7 +77,7 @@ const Hero = () => {
               ].map((stat, i) => (
                 <div key={i}>
                   <p className="text-2xl font-bold text-white mb-1 tracking-tighter">{stat.val}</p>
-                  <p className="text-[10px] font-mono text-white/20 uppercase tracking-widest">{stat.label}</p>
+                  <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">{stat.label}</p>
                 </div>
               ))}
             </motion.div>
@@ -87,7 +89,9 @@ const Hero = () => {
             transition={{ duration: 1.5, ease: "easeOut" }}
             className="relative hidden lg:block"
           >
-            <CyberGlobe />
+            <Suspense fallback={<div className="w-[500px] h-[500px] rounded-full border border-electric-blue/20 animate-pulse flex items-center justify-center"><span className="text-xs text-electric-blue font-mono uppercase">Loading Globe Engine...</span></div>}>
+              <CyberGlobe />
+            </Suspense>
             {/* HUD Elements */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-electric-blue/10 rounded-full animate-[spin_20s_linear_infinite] pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-electric-blue/5 rounded-full animate-[spin_30s_linear_infinite_reverse] pointer-events-none" />
@@ -102,7 +106,7 @@ const Hero = () => {
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <div className="w-px h-12 bg-gradient-to-b from-electric-blue to-transparent" />
-        <span className="text-[10px] font-mono text-white/20 uppercase tracking-[0.3em]">Scroll_To_Explore</span>
+        <span className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em]">Scroll_To_Explore</span>
       </motion.div>
     </section>
   );

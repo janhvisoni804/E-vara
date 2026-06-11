@@ -48,7 +48,7 @@ const CyberDashboardLoader = () => {
               animate={{ opacity: 1, x: 0 }}
               className="text-[10px] text-[#007AFF] tracking-widest"
             >
-              <span className="text-white/20">[{new Date().toLocaleTimeString()}]</span> {log}
+              <span className="text-white/40">[{new Date().toLocaleTimeString()}]</span> {log}
             </motion.p>
           ))}
         </AnimatePresence>

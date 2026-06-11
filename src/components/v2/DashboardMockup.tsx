@@ -30,22 +30,22 @@ const DashboardMockup = () => {
               <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
               <span className="text-[9px] font-mono text-success uppercase">System_Healthy</span>
             </div>
-            <span className="text-[9px] font-mono text-white/40">10:42:15 UTC</span>
+            <span className="text-[9px] font-mono text-white/60">10:42:15 UTC</span>
           </div>
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-8 grid grid-cols-12 gap-6">
+        <div className="p-4 sm:p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column - Key Stats */}
-          <div className="col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-6">
             <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.03] space-y-4">
               <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono text-white/40 uppercase">Threat Score</span>
+                <span className="text-[10px] font-mono text-white/60 uppercase">Threat Score</span>
                 <Activity className="w-4 h-4 text-electric-blue" />
               </div>
               <div className="flex items-baseline gap-2">
                 <span className="text-5xl font-bold tracking-tighter">04</span>
-                <span className="text-white/40 font-mono text-xs">/ 100</span>
+                <span className="text-white/60 font-mono text-xs">/ 100</span>
               </div>
               <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                 <motion.div 
@@ -59,7 +59,7 @@ const DashboardMockup = () => {
 
             <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.03] space-y-4">
               <div className="flex justify-between items-start">
-                <span className="text-[10px] font-mono text-white/40 uppercase">AI Integrity Index</span>
+                <span className="text-[10px] font-mono text-white/60 uppercase">AI Integrity Index</span>
                 <Lock className="w-4 h-4 text-purple-500" />
               </div>
               <span className="text-3xl font-bold tracking-tighter">99.8%</span>
@@ -72,7 +72,7 @@ const DashboardMockup = () => {
           </div>
 
           {/* Center Column - Visualizations */}
-          <div className="col-span-8 space-y-6">
+          <div className="lg:col-span-8 space-y-6">
             <div className="h-[280px] rounded-2xl border border-white/5 bg-white/[0.02] relative overflow-hidden flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-br from-electric-blue/5 to-transparent" />
               <Search className="w-12 h-12 text-electric-blue/20 animate-pulse" />
@@ -101,21 +101,21 @@ const DashboardMockup = () => {
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.03]">
                 <div className="flex items-center gap-3 mb-4">
                   <Globe className="w-4 h-4 text-electric-blue" />
-                  <span className="text-[10px] font-mono text-white/40 uppercase">Active Monitoring</span>
+                  <span className="text-[10px] font-mono text-white/60 uppercase">Active Monitoring</span>
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold">12.4k</span>
-                  <span className="text-[10px] text-white/40 font-mono">sources/sec</span>
+                  <span className="text-[10px] text-white/60 font-mono">sources/sec</span>
                 </div>
               </div>
               <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.03]">
                 <div className="flex items-center gap-3 mb-4">
                   <AlertCircle className="w-4 h-4 text-warning" />
-                  <span className="text-[10px] font-mono text-white/40 uppercase">Recent Alerts</span>
+                  <span className="text-[10px] font-mono text-white/60 uppercase">Recent Alerts</span>
                 </div>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold">0</span>

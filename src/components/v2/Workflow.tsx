@@ -30,7 +30,7 @@ const Workflow = () => {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white mb-2 uppercase tracking-widest">{step.title}</h3>
-                    <p className="text-white/40 leading-relaxed max-w-sm">{step.desc}</p>
+                    <p className="text-white/60 leading-relaxed max-w-sm">{step.desc}</p>
                   </div>
                 </motion.div>
               ))}

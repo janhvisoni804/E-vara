@@ -23,7 +23,7 @@ const InvestorSection = () => {
             <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-white/60">Investor_Portal</span>
           </motion.div>
           <h2 className="text-5xl lg:text-7xl font-bold tracking-tighter text-white mb-8">A Venture-Scale <br /> Opportunity</h2>
-          <p className="text-xl text-white/40 font-light">E-vara is positioned at the intersection of Generative AI growth and the digital trust crisis.</p>
+          <p className="text-xl text-white/60 font-light">E-vara is positioned at the intersection of Generative AI growth and the digital trust crisis.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-20">
@@ -35,9 +35,9 @@ const InvestorSection = () => {
               transition={{ delay: i * 0.1 }}
               className="p-10 rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-xl group hover:border-electric-blue/30 transition-all"
             >
-              <p className="text-[10px] font-mono text-white/40 uppercase tracking-[0.3em] mb-4">{stat.label}</p>
+              <p className="text-[10px] font-mono text-white/60 uppercase tracking-[0.3em] mb-4">{stat.label}</p>
               <p className="text-6xl font-bold text-white mb-4 tracking-tighter group-hover:text-electric-blue transition-colors">{stat.val}</p>
-              <p className="text-sm text-white/40 leading-relaxed">{stat.sub}</p>
+              <p className="text-sm text-white/60 leading-relaxed">{stat.sub}</p>
             </motion.div>
           ))}
         </div>
@@ -58,7 +58,7 @@ const InvestorSection = () => {
                       </div>
                       <div>
                         <p className="font-bold text-white mb-1 uppercase text-xs tracking-widest">{item.title}</p>
-                        <p className="text-sm text-white/40">{item.desc}</p>
+                        <p className="text-sm text-white/60">{item.desc}</p>
                       </div>
                     </div>
                   ))}

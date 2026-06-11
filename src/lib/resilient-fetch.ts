@@ -1,51 +1,26 @@
 import { toast } from "sonner";
 
-// Check if we are already in Simulation Mode
-export const isSimulationMode = (): boolean => {
-  return localStorage.getItem("e_vara_simulation_mode") === "true";
-};
-
-// Enable Simulation Mode
-export const enableSimulationMode = (): void => {
-  if (localStorage.getItem("e_vara_simulation_mode") !== "true") {
-    localStorage.setItem("e_vara_simulation_mode", "true");
-    toast.warning("DATABASE OFFLINE: Silent failover engaged. Booting Local Simulation Mode.", {
-      description: "App features are fully simulated using client-side vaults.",
-      duration: 5000,
-    });
-  }
-};
+// In-memory cache replaces insecure localStorage for sensitive data
+const memoryCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 1000 * 60 * 5; // 5 minutes
 
 /**
- * Executes an operation with automatic retry & fallback to localStorage.
- * If both fail, it returns the provided static mock fallback data.
+ * Executes an operation with automatic retry & fallback to in-memory cache.
+ * Throws the actual error if all retries fail and no cache exists.
  */
 export async function runResilient<T>(
   operation: () => Promise<T>,
   storageKey: string,
-  mockFallback: T,
+  emptyFallback: T,
   retries = 3,
   delay = 500
 ): Promise<T> {
-  // If we are already in simulation mode, immediately bypass and serve cache/mock
-  if (isSimulationMode()) {
-    const cached = localStorage.getItem(storageKey);
-    if (cached) {
-      try {
-        return JSON.parse(cached) as T;
-      } catch (e) {
-        return mockFallback;
-      }
-    }
-    return mockFallback;
-  }
-
   let lastError: unknown = null;
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await operation();
-      // Cache successful database responses
-      localStorage.setItem(storageKey, JSON.stringify(result));
+      // Cache successful database responses securely in memory
+      memoryCache.set(storageKey, { data: result, timestamp: Date.now() });
       return result;
     } catch (error) {
       lastError = error;
@@ -56,14 +31,17 @@ export async function runResilient<T>(
     }
   }
 
-  console.warn(`Resilient fetch exhausted all ${retries} retries for ${storageKey}. Silent failover engaged. Error:`, lastError);
-  enableSimulationMode();
+  console.warn(`Resilient fetch exhausted all ${retries} retries for ${storageKey}. Returning cached or empty fallback. Error:`, lastError);
 
-  const cached = localStorage.getItem(storageKey);
-  if (cached) {
-    try {
-      return JSON.parse(cached) as T;
-    } catch (e) { /* ignore */ }
+  const cached = memoryCache.get(storageKey);
+  if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+    return cached.data as T;
   }
-  return mockFallback;
+  
+  toast.error("Network Error", {
+    description: "Could not fetch latest data from the server.",
+    duration: 5000,
+  });
+
+  return emptyFallback;
 }

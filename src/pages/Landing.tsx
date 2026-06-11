@@ -19,10 +19,10 @@ const PremiumNavbar = () => (
         <span className="text-xl font-bold tracking-tighter text-white uppercase italic">E-vara</span>
       </Link>
       <div className="hidden md:flex items-center gap-8">
-        <Link to="/solutions" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-[#007AFF] transition-colors">Solutions</Link>
-        <Link to="/pricing" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-[#007AFF] transition-colors">Pricing</Link>
-        <Link to="/docs" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-[#007AFF] transition-colors">Documentation</Link>
-        <Link to="/resources" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40 hover:text-[#007AFF] transition-colors">Resources</Link>
+        <Link to="/solutions" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 hover:text-[#007AFF] transition-colors">Solutions</Link>
+        <Link to="/pricing" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 hover:text-[#007AFF] transition-colors">Pricing</Link>
+        <Link to="/docs" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 hover:text-[#007AFF] transition-colors">Documentation</Link>
+        <Link to="/resources" className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/60 hover:text-[#007AFF] transition-colors">Resources</Link>
       </div>
       <div className="flex items-center gap-4">
         <Link to="/book-demo" aria-label="Book Demo">
@@ -76,22 +76,22 @@ const LandingPage = () => {
         <Hero />
         
         {/* The Problem Section */}
-        <section className="py-40 container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
+        <section className="py-20 lg:py-40 container mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
              <div>
-                <h2 className="text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-10 leading-[0.85]">The Digital <br /> <span className="text-[#007AFF] italic">Trust</span> Crisis</h2>
-                <p className="text-2xl text-white/40 font-light leading-relaxed mb-12 max-w-xl">
+                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-8 lg:mb-10 leading-[0.85]">The Digital <br /> <span className="text-[#007AFF] italic">Trust</span> Crisis</h2>
+                <p className="text-lg sm:text-xl md:text-2xl text-white/60 font-light leading-relaxed mb-10 lg:mb-12 max-w-xl">
                    Generative AI has weaponized digital identity. 
                    Organizations and individuals are now targets of 900% more sophisticated deepfakes than in 2024.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
                    <div className="p-10 rounded-[32px] bg-white/[0.02] border border-white/10 backdrop-blur-xl">
                       <p className="text-5xl font-bold text-[#007AFF] mb-3">900%</p>
-                      <p className="text-[11px] font-mono text-white/40 uppercase tracking-widest">Deepfake Growth_</p>
+                      <p className="text-[11px] font-mono text-white/60 uppercase tracking-widest">Deepfake Growth_</p>
                    </div>
                    <div className="p-10 rounded-[32px] bg-white/[0.02] border border-white/10 backdrop-blur-xl">
                       <p className="text-5xl font-bold text-[#007AFF] mb-3">$12.4B</p>
-                      <p className="text-[11px] font-mono text-white/40 uppercase tracking-widest">Reputation Loss_</p>
+                      <p className="text-[11px] font-mono text-white/60 uppercase tracking-widest">Reputation Loss_</p>
                    </div>
                 </div>
              </div>
@@ -122,23 +122,23 @@ const LandingPage = () => {
 
         <Workflow />
 
-        <section className="py-40 container mx-auto px-6 bg-[radial-gradient(circle_at_50%_50%,#007AFF05,transparent_70%)]">
-           <div className="max-w-4xl mx-auto text-center mb-24">
-              <h2 className="text-6xl lg:text-8xl font-bold tracking-tighter mb-10 italic">The Interface</h2>
-              <p className="text-2xl text-white/40 font-light max-w-2xl mx-auto">Institutional-grade monitoring. Designed for the high-end security professional.</p>
+        <section className="py-20 lg:py-40 container mx-auto px-4 sm:px-6 bg-[radial-gradient(circle_at_50%_50%,#007AFF05,transparent_70%)] overflow-hidden">
+           <div className="max-w-4xl mx-auto text-center mb-16 lg:mb-24">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tighter mb-6 lg:mb-10 italic">The Interface</h2>
+              <p className="text-lg sm:text-xl md:text-2xl text-white/60 font-light max-w-2xl mx-auto">Institutional-grade monitoring. Designed for the high-end security professional.</p>
            </div>
            <DashboardMockup />
         </section>
 
         <InvestorSection />
 
-        <section className="py-40 bg-black border-y border-white/5">
-           <div className="container mx-auto px-6 text-center mb-20">
-              <h2 className="text-4xl lg:text-6xl font-bold tracking-tight text-white mb-6 uppercase">Core Technology_</h2>
+        <section className="py-20 lg:py-40 bg-black border-y border-white/5">
+           <div className="container mx-auto px-4 sm:px-6 text-center mb-16 lg:mb-20">
+              <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-white mb-6 uppercase">Core Technology_</h2>
               <div className="w-24 h-1 bg-[#007AFF] mx-auto" />
            </div>
-           <div className="container mx-auto px-6">
-              <div className="grid md:grid-cols-4 gap-10">
+           <div className="container mx-auto px-4 sm:px-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
                  {[
                     { t: "Computer Vision", d: "Proprietary biometric mapping of facial landmarks." },
                     { t: "Neural Classification", d: "Real-time integrity scoring of visual data streams." },
@@ -147,7 +147,7 @@ const LandingPage = () => {
                  ].map((tech, i) => (
                    <div key={i} className="group p-12 rounded-[40px] border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#007AFF]/30 transition-all duration-500">
                       <p className="text-2xl font-bold text-white mb-6 tracking-tight group-hover:text-[#007AFF] transition-colors">{tech.t}</p>
-                      <p className="text-base text-white/40 leading-relaxed font-light">{tech.d}</p>
+                      <p className="text-base text-white/60 leading-relaxed font-light">{tech.d}</p>
                    </div>
                  ))}
               </div>
@@ -194,8 +194,8 @@ const LandingPage = () => {
          <div className="container mx-auto px-6 mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-[10px] font-mono text-white/50 uppercase tracking-[0.3em]">© 2026 E-VARA SECURITY SYSTEMS. ALL RIGHTS RESERVED.</p>
             <div className="flex gap-10">
-               <a href="#" className="text-[10px] font-mono text-white/40 hover:text-white uppercase">Privacy_Policy</a>
-               <a href="#" className="text-[10px] font-mono text-white/40 hover:text-white uppercase">Terms_of_Service</a>
+               <a href="#" className="text-[10px] font-mono text-white/60 hover:text-white uppercase">Privacy_Policy</a>
+               <a href="#" className="text-[10px] font-mono text-white/60 hover:text-white uppercase">Terms_of_Service</a>
             </div>
          </div>
       </footer>

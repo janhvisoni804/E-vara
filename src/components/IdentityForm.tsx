@@ -41,10 +41,12 @@ const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
       let scanError = null;
       try {
         const hashedEmail = await sha256(email);
+        const isDemoTarget = email.toLowerCase().endsWith('@demo.com') || email.toLowerCase().endsWith('@investor.com');
         const res = await supabase.functions.invoke('breach-check', {
           body: { 
-            identityValue: hashedEmail, 
-            userId: user.id 
+            identityHash: hashedEmail, 
+            userId: user.id,
+            isDemoTarget
           }
         });
         scanResult = res.data;
@@ -55,8 +57,10 @@ const IdentityForm = ({ onSave, initial }: IdentityFormProps) => {
 
       let resultCount = 0;
       if (scanError) {
-        // Mock offline response
-        resultCount = Math.floor(Math.random() * 5);
+        toast.error("Intelligence Engine Offline", {
+          description: "Could not complete the breach scan. Ensure APIs are connected."
+        });
+        return; // Early return to prevent false success
       } else {
         resultCount = scanResult?.count || 0;
       }
