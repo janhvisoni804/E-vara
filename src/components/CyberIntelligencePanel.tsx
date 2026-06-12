@@ -420,17 +420,17 @@ const CyberIntelligencePanel = ({
                 onClick={() => setSelectedNode(node)}
                 aria-pressed={selectedNode?.id === node.id}
                 aria-label={`${node.label} exposure ${node.exposure}%`}
+                className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-[10px] font-mono transition-all ${
                   selectedNode?.id === node.id
                     ? "bg-primary/30 shadow-[0_0_22px_hsl(var(--primary)/0.65)]"
                     : "bg-secondary/60"
                 }`}
-                className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full px-2 py-1 text-[10px] font-mono transition-all ${
-              >
                 style={{
                   left: `${node.x}%`,
                   top: `${node.y}%`,
                   border: `1px solid hsl(var(--severity-${node.exposure > 65 ? "high" : node.exposure > 45 ? "medium" : "low"}) / 0.8)`,
                 }}
+              />
             ))}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/80 bg-primary/20 px-3 py-1 text-xs font-semibold shadow-[0_0_28px_hsl(var(--primary)/0.55)]">
               {username || fullName}

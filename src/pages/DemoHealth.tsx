@@ -97,7 +97,7 @@ export default function DemoHealth() {
         freshnessText = "Unavailable";
         freshnessColor = "text-cyan-400";
       } else {
-        // eslint-disable-next-line react-hooks/purity
+         
         const now = Date.now();
         if (now > expiresAt) {
           freshnessText = "Stale";
