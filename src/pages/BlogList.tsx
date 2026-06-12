@@ -7,7 +7,7 @@ import { Helmet } from "react-helmet"; // Assuming they might use helmet for SEO
 
 const BlogList = () => {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#0a0a0a] text-white pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <motion.h1 
@@ -37,7 +37,7 @@ const BlogList = () => {
               className="bg-[#111] border border-gray-800 rounded-xl overflow-hidden hover:border-emerald-500/50 transition-colors duration-300 flex flex-col"
             >
               <div className="p-6 flex-1 flex flex-col">
-                <div className="flex items-center text-sm text-gray-500 mb-4 space-x-4">
+                <div className="flex items-center text-sm text-gray-400 mb-4 space-x-4">
                   <span>{post.date}</span>
                   <span>•</span>
                   <span>{post.readTime}</span>
@@ -62,7 +62,7 @@ const BlogList = () => {
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

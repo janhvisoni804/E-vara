@@ -32,8 +32,8 @@ const BlogPost = lazy(() => import("./pages/BlogPost.tsx"));
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import FeedbackWidget from "@/components/FeedbackWidget";
-import Index from "./pages/Index";
-import Labs from "./pages/Labs";
+const Index = lazy(() => import("./pages/Index.tsx"));
+const Labs = lazy(() => import("./pages/Labs.tsx"));
 import {
   usePageView,
   useScrollDepth,
