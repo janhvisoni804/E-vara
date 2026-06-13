@@ -5,8 +5,8 @@ import { useSEO } from "@/hooks/useSEO";
 
 const ResourcesPage = () => {
   useSEO({
-    title: "Resources & Insights",
-    description: "Cybersecurity research, whitepapers, and guides from E-VARA.",
+    title: "Digital Reputation Blog & Identity Protection Guides | E-VARA",
+    description: "Learn how to clean up your digital footprint, remove personal info from Google, and protect your identity online with E-VARA's expert guides.",
     canonicalUrl: "https://e-vara.vercel.app/resources",
   });
 
@@ -64,7 +64,7 @@ const ResourcesPage = () => {
       <div className="container mx-auto px-6 py-24">
         <div className="text-center max-w-2xl mx-auto mb-20">
           <h1 className="text-5xl font-black tracking-tighter uppercase mb-6 italic">
-            Intelligence Hub
+            Identity Protection Blog
           </h1>
           <p className="text-muted-foreground font-body text-lg">
             Research, technical specifications, and strategic guidance for
